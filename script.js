@@ -21,6 +21,9 @@ function loadQuestion() {
 }
 
 function answer(userAnswer) {
+    // disable buttons temporarily (optional)
+    disableButtons(true);
+
     if (userAnswer === questions[index].answer) {
         document.getElementById("feedback").textContent = "Correct!";
         score++;
@@ -29,12 +32,22 @@ function answer(userAnswer) {
     }
 
     index++;
+
     if (index < questions.length) {
-        setTimeout(loadQuestion, 800);
+        setTimeout(() => {
+            disableButtons(false);
+            loadQuestion();
+        }, 800);
     } else {
         document.getElementById("question").textContent = "Quiz Completed!";
-        document.getElementById("feedback").textContent = "";
+        document.getElementById("feedback").textContent = `Final Score: ${score}/${questions.length}`;
+        document.getElementById("score").textContent = "";
     }
+}
+
+function disableButtons(state) {
+    document.getElementById("trueBtn").disabled = state;
+    document.getElementById("falseBtn").disabled = state;
 }
 
 loadQuestion();
