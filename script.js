@@ -13,41 +13,104 @@ const questions = [
 
 let index = 0;
 let score = 0;
+let timed = false;
+let timerValue = 60;
+let timerInterval;
+let totalTime = 0;
 
+/* DOM Elements */
+const startScreen = document.getElementById("start-screen");
+const quizScreen = document.getElementById("quiz-screen");
+const resultsScreen = document.getElementById("results-screen");
+
+const questionEl = document.getElementById("question");
+const feedbackEl = document.getElementById("feedback");
+const scoreEl = document.getElementById("score");
+const timerEl = document.getElementById("timer");
+const progressEl = document.getElementById("progress");
+const finalScoreEl = document.getElementById("final-score");
+const timeTakenEl = document.getElementById("time-taken");
+
+/* Start Quiz */
+document.getElementById("start-btn").addEventListener("click", () => {
+    timed = document.getElementById("timed-mode").checked;
+
+    startScreen.classList.add("hidden");
+    quizScreen.classList.remove("hidden");
+
+    loadQuestion();
+});
+
+/* Load Question */
 function loadQuestion() {
-    document.getElementById("question").textContent = questions[index].q;
-    document.getElementById("feedback").textContent = "";
-    document.getElementById("score").textContent = `Score: ${score}/${questions.length}`;
+    questionEl.textContent = questions[index].q;
+    feedbackEl.textContent = "";
+    scoreEl.textContent = `Score: ${score * 10}/100`;
+
+    progressEl.style.width = `${(index / questions.length) * 100}%`;
+
+    if (timed) startTimer();
 }
 
+/* Timer */
+function startTimer() {
+    timerValue = 60;
+    timerEl.textContent = timerValue;
+    timerEl.classList.remove("hidden", "warning");
+
+    timerInterval = setInterval(() => {
+        timerValue--;
+        totalTime++;
+
+        timerEl.textContent = timerValue;
+
+        if (timerValue <= 10) {
+            timerEl.classList.add("warning");
+        }
+        if (timerValue === 0) {
+            clearInterval(timerInterval);
+            answer("timeout");
+        }
+    }, 1000);
+}
+
+/* Answer Handling */
 function answer(userAnswer) {
-    // disable buttons temporarily (optional)
-    disableButtons(true);
+    if (timed) clearInterval(timerInterval);
 
     if (userAnswer === questions[index].answer) {
-        document.getElementById("feedback").textContent = "Correct!";
+        feedbackEl.textContent = "Correct!";
         score++;
+    } else if (userAnswer === "timeout") {
+        feedbackEl.textContent = "Time’s up!";
     } else {
-        document.getElementById("feedback").textContent = "Incorrect!";
+        feedbackEl.textContent = "Incorrect!";
     }
 
     index++;
 
     if (index < questions.length) {
-        setTimeout(() => {
-            disableButtons(false);
-            loadQuestion();
-        }, 800);
+        setTimeout(loadQuestion, 800);
     } else {
-        document.getElementById("question").textContent = "Quiz Completed!";
-        document.getElementById("feedback").textContent = `Final Score: ${score}/${questions.length}`;
-        document.getElementById("score").textContent = "";
+        quizScreen.classList.add("hidden");
+        showResults();
     }
 }
 
-function disableButtons(state) {
-    document.getElementById("trueBtn").disabled = state;
-    document.getElementById("falseBtn").disabled = state;
+/* Results */
+function showResults() {
+    resultsScreen.classList.remove("hidden");
+
+    finalScoreEl.textContent = `Your Score: ${score * 10}/100`;
+    timeTakenEl.textContent = timed ? `Total Time: ${totalTime} seconds` : "";
 }
 
-loadQuestion();
+/* Restart */
+document.getElementById("restart-btn").addEventListener("click", () => {
+    index = 0;
+    score = 0;
+    totalTime = 0;
+
+    resultsScreen.classList.add("hidden");
+    startScreen.classList.remove("hidden");
+});
