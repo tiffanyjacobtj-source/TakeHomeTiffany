@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Misinformation Awareness Quiz</title>
-   <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -33,8 +33,8 @@
         <h2 id="question"></h2>
 
         <div class="btn-container">
-            <button class="answer-btn" onclick="answer(true)">True</button>
-            <button class="answer-btn" onclick="answer(false)">False</button>
+            <button class="answer-btn" data-value="true">True</button>
+            <button class="answer-btn" data-value="false">False</button>
         </div>
 
         <p id="feedback"></p>
@@ -49,6 +49,6 @@
         <button id="restart-btn">Restart Quiz</button>
     </div>
 
-   <script src="script.js"></script>
+    <script src="script.js" defer></script>
 </body>
 </html>
