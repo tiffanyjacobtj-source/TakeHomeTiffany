@@ -17,25 +17,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const timedModeCheckbox = document.getElementById("timed-mode");
   const answerButtons = document.querySelectorAll(".answer-btn");
 
+  // Quiz Data
+  const questions = [
+    { q: "A forwarded WhatsApp message is always reliable.", a: false, mistake: "Trusting forwarded messages without checking." },
+    { q: "A glitchy video (e.g., snow in Bali) can often be edited or AI-generated.", a: true, mistake: "Believing visual glitches must be real." },
+    { q: "Videos on TikTok are always fact-checked.", a: false, mistake: "Thinking TikTok automatically checks the truth of videos." },
+    { q: "You should always cross-check news from multiple sources.", a: true, mistake: "Not verifying info with multiple sources." },
+    { q: "A viral screenshot of a celebrity apology is always real.", a: false, mistake: "Believing viral screenshots without proof." },
+    { q: "YouTube thumbnails can be misleading or edited.", a: true, mistake: "Not recognizing clickbait or edited thumbnails." },
+    { q: "If many people share a post, it must be true.", a: false, mistake: "Believing popularity = truth." },
+    { q: "AI-generated news clips can look real at first glance.", a: true, mistake: "Not identifying AI-generated content." },
+    { q: "Anything sent by a family member on WhatsApp is guaranteed true.", a: false, mistake: "Trusting family messages without checking facts." },
+    { q: "Fact-checking before sharing helps reduce misinformation.", a: true, mistake: "Skipping fact-checking before sharing." }
+  ];
+
   let score = 0;
   let index = 0;
   let timed = false;
   let timer;
   let totalTime = 0;
-
-  // Quiz Data
-  const questions = [
-    { q: "A forwarded WhatsApp message is always reliable.", a: false },
-    { q: "A glitchy video (e.g., snow in Bali) can often be edited or AI-generated.", a: true },
-    { q: "Videos on TikTok are always fact-checked.", a: false },
-    { q: "You should always cross-check news from multiple sources.", a: true },
-    { q: "A viral screenshot of a celebrity apology is always real.", a: false },
-    { q: "YouTube thumbnails can be misleading or edited.", a: true },
-    { q: "If many people share a post, it must be true.", a: false },
-    { q: "AI-generated news clips can look real at first glance.", a: true },
-    { q: "Anything sent by a family member on WhatsApp is guaranteed true.", a: false },
-    { q: "Fact-checking before sharing helps reduce misinformation.", a: true }
-  ];
+  let wrongAnswers = []; // NEW: stores user's mistakes
 
   // Start Quiz
   startBtn.addEventListener("click", () => {
@@ -46,9 +47,9 @@ document.addEventListener("DOMContentLoaded", () => {
     score = 0;
     index = 0;
     totalTime = 0;
+    wrongAnswers = [];
 
     loadQuestion();
-
     if (timed) startTimer();
   });
 
@@ -73,6 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Handle Answer
   function answer(choice) {
     const correct = questions[index].a;
+
     if (choice === correct) {
       score++;
       feedbackEl.textContent = "Correct!";
@@ -80,6 +82,9 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       feedbackEl.textContent = "Incorrect!";
       feedbackEl.style.color = "red";
+
+      // NEW: record mistake
+      wrongAnswers.push(questions[index].mistake);
     }
 
     index++;
@@ -92,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Attach click listeners
+  // Button Listeners
   answerButtons.forEach(btn => {
     btn.addEventListener("click", () => {
       const choice = btn.dataset.value === "true";
@@ -129,8 +134,9 @@ document.addEventListener("DOMContentLoaded", () => {
     resultsScreen.classList.remove("hidden");
 
     const finalPoints = score * 10;
-    finalScoreEl.textContent = `Your Score: ${finalPoints}/100`;
+    finalScoreEl.innerHTML = `Your Score: ${finalPoints}/100`;
 
+    // Score Messages
     let message = "";
     if (finalPoints < 50) {
       message =
@@ -145,14 +151,28 @@ document.addEventListener("DOMContentLoaded", () => {
         "Try to:<br>" +
         "• Pause before sharing posts<br>" +
         "• Watch for emotional or sensational wording<br>" +
-        "• Compare information from reputable/reliable news outlets";
+        "• Compare information from reputable news outlets";
     } else {
       message =
         "🎉 Great job! You're skilled at spotting misinformation!<br><br>" +
         "Keep staying critical and always verify what you see online.";
     }
 
-    timeTakenEl.innerHTML = message + "<br><br>" +
+    // NEW: Common Mistakes Section
+    let mistakesList = "";
+    if (wrongAnswers.length > 0) {
+      mistakesList =
+        "<br><br><strong>🛑 Common Mistakes You Made:</strong><br>" +
+        wrongAnswers.map(m => "• " + m).join("<br>");
+    } else {
+      mistakesList = "<br><br><strong>✅ You didn’t make any major mistakes!</strong>";
+    }
+
+    // Add timer + mistakes
+    timeTakenEl.innerHTML =
+      message +
+      mistakesList +
+      "<br><br>" +
       (timed ? `⏳ Total Time: ${totalTime} seconds` : "");
   }
 
