@@ -147,3 +147,12 @@ function showResults() {
     timeTakenEl.innerHTML = message + "<br><br>" +
         (timed ? `⏳ Total Time: ${totalTime} seconds` : "");
 }
+// Attach click listeners to answer buttons
+const answerButtons = document.querySelectorAll(".answer-btn");
+
+answerButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        const choice = btn.dataset.value === "true"; // convert string to boolean
+        answer(choice);
+    });
+});
