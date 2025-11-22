@@ -1,54 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Misinformation Awareness Quiz</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Misinformation Awareness Quiz</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Start Screen -->
-    <div id="start-screen" class="screen">
-        <h1>Misinformation Awareness Quiz</h1>
-        <p>Test your ability to spot online misinformation and misleading content.</p>
+  <!-- Start Screen -->
+  <div id="start-screen" class="screen">
+    <h1>Misinformation Awareness Quiz</h1>
+    <p>Test your ability to spot online misinformation and misleading content.</p>
 
-        <label class="toggle">
-            <input type="checkbox" id="timed-mode">
-            <span class="slider"></span>
-            Timed Mode (60 sec per question)
-        </label>
+    <label class="toggle">
+      <input type="checkbox" id="timed-mode">
+      <span class="slider"></span>
+      Timed Mode (60 sec per question)
+    </label>
 
-        <button id="start-btn">Start Quiz</button>
+    <button id="start-btn">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quiz-screen" class="screen hidden">
+    <div id="progress-bar">
+      <div id="progress"></div>
     </div>
 
-    <!-- Quiz Screen -->
-    <div id="quiz-screen" class="screen hidden">
-        <div id="progress-bar">
-            <div id="progress"></div>
-        </div>
+    <div id="timer" class="timer hidden">60</div>
 
-        <div id="timer" class="timer hidden">60</div>
+    <h2 id="question"></h2>
 
-        <h2 id="question"></h2>
-
-        <div class="btn-container">
-            <button class="answer-btn" data-value="true">True</button>
-            <button class="answer-btn" data-value="false">False</button>
-        </div>
-
-        <p id="feedback"></p>
-        <p id="score"></p>
+    <div class="btn-container">
+      <button class="answer-btn" data-value="true">True</button>
+      <button class="answer-btn" data-value="false">False</button>
     </div>
 
-    <!-- Results Screen -->
-    <div id="results-screen" class="screen hidden">
-        <h1>Quiz Completed!</h1>
-        <p id="final-score"></p>
-        <p id="time-taken"></p>
-        <button id="restart-btn">Restart Quiz</button>
-    </div>
+    <p id="feedback"></p>
+    <p id="score"></p>
+  </div>
 
-    <script src="script.js" defer></script>
+  <!-- Results Screen -->
+  <div id="results-screen" class="screen hidden">
+    <h1>Quiz Completed!</h1>
+    <p id="final-score"></p>
+    <p id="time-taken"></p>
+    <button id="restart-btn">Restart Quiz</button>
+  </div>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
